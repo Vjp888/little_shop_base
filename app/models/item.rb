@@ -1,5 +1,6 @@
 class Item < ApplicationRecord
-  before_validation :create_slug
+  before_create :create_slug
+  before_update :update_slug, if: :name_changed?
 
   belongs_to :user, foreign_key: 'merchant_id'
   has_many :order_items
@@ -53,13 +54,22 @@ class Item < ApplicationRecord
   private
 
   def create_slug
+    # binding.pry
     if self.name
-      # binding.pry
       if Item.exists?(name: self.name)
-        self.slug = self.name.parameterize.downcase + (rand).to_s
+        self.slug = (self.name + "-" + (rand).to_s).parameterize.downcase
       else
         self.slug = self.name.parameterize.downcase
       end
+    end
+  end
+
+  def update_slug
+    # binding.pry
+    if Item.exists?(name: self.name)
+      self.slug = (self.name + "-" + (rand).to_s).parameterize.downcase
+    else
+      self.slug = self.name.parameterize.downcase
     end
   end
 end
