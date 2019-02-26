@@ -150,6 +150,10 @@ class User < ApplicationRecord
          .limit(limit)
   end
 
+  def to_param
+    slug
+  end
+
   private
 
   def create_slug

@@ -51,10 +51,13 @@ class Item < ApplicationRecord
       .count > 0
   end
 
+  def to_param
+    slug
+  end
+
   private
 
   def create_slug
-    # binding.pry
     if self.name
       if Item.exists?(name: self.name)
         self.slug = (self.name + "-" + (rand).to_s).parameterize.downcase
@@ -65,7 +68,6 @@ class Item < ApplicationRecord
   end
 
   def update_slug
-    # binding.pry
     if Item.exists?(name: self.name)
       self.slug = (self.name + "-" + (rand).to_s).parameterize.downcase
     else
