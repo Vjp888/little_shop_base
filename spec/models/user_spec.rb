@@ -2,23 +2,18 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   describe 'validations' do
-    it { should validate_presence_of :email }
+    it { should validate_presence_of :email}
     it { should validate_uniqueness_of :email }
     it { should validate_presence_of :name }
     it { should validate_presence_of :address }
     it { should validate_presence_of :city }
     it { should validate_presence_of :state }
     it { should validate_presence_of :zip }
-    it 'creates a slug for users when a user is created' do
+    it 'Creates and updates a slug when a user is created or updated' do
       slugged = User.create(name: "steve", email: "test@test.net", address: "123 st", state: "CO", zip: "12345")
-      expect(slugged.slug).to eq("test-test-com")
-    end
-
-    it 'updates a user slug when info is updated' do
-      slugged = User.create(name: "steve", email: "test@test.net", address: "123 st", state: "CO", zip: "12345")
-      expect(slugged.slug).to eq("test-test-com")
-      slugged.update(email: "sluggerific@gmail.com")
-      expect(slugged.slug).to eq("sluggerific-gmail-com")
+      expect(slugged.slug).to eq("test-test-net")
+      slugged.update(email: "sluggerific@gmail.net")
+      expect(slugged.slug).to eq("sluggerific-gmail-net")
     end
   end
 

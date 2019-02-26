@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_secure_password
+  before_validation :create_slug, on: :create
 
   enum role: [:default, :merchant, :admin]
 
@@ -146,5 +147,13 @@ class User < ApplicationRecord
          .select('users.name, sum(order_items.quantity * order_items.price) AS total')
          .order('total DESC')
          .limit(limit)
+  end
+
+  private
+
+  def create_slug
+    if self.email
+      self.slug = self.email.parameterize.downcase
+    end
   end
 end
