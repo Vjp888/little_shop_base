@@ -10,7 +10,7 @@ RSpec.describe User, type: :model do
     it { should validate_presence_of :state }
     it { should validate_presence_of :zip }
     it 'Creates and updates a slug when a user is created or updated' do
-      slugged = User.create(name: "steve", email: "test@test.net", address: "123 st", state: "CO", zip: "12345")
+      slugged = User.create(name: "steve", email: "test@test.net", address: "123 st", city: "bob", state: "CO", zip: "12345", password: "password")
       expect(slugged.slug).to eq("test-test-net")
       slugged.update(email: "sluggerific@gmail.net")
       expect(slugged.slug).to eq("sluggerific-gmail-net")

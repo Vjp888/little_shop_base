@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_secure_password
-  before_validation :create_slug, on: :create
+  before_create :create_slug
+  before_update :update_slug, if: :email_changed?
 
   enum role: [:default, :merchant, :admin]
 
@@ -155,5 +156,9 @@ class User < ApplicationRecord
     if self.email
       self.slug = self.email.parameterize.downcase
     end
+  end
+
+  def update_slug
+    self.slug = self.email.parameterize.downcase
   end
 end
