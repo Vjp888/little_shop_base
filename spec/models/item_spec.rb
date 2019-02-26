@@ -9,6 +9,17 @@ RSpec.describe Item, type: :model do
     it { should validate_presence_of :inventory }
     it { should validate_numericality_of(:inventory).only_integer }
     it { should validate_numericality_of(:inventory).is_greater_than_or_equal_to(0) }
+
+    it 'creates a slug for an item when created or updated' do
+      merchant = create(:merchant)
+      item_1 = Item.create(name: "stetson one five two", description: "It's a hat", price: 2.50, merchant_id: merchant.id)
+      item_2 = Item.create(name: "stetson one five two", description: "It's a hat", price: 2.50, merchant_id: merchant.id)
+
+      expect(item_1.slug).to eq("stetson-one-five-two")
+      expect(item_2.slug).to_not eq("stetson-one-five-two")
+      item_2.update(name: "Harold's sword")
+      expect(item_2.slug).to eq("harold-s-sword")
+    end
   end
 
   describe 'relationships' do
