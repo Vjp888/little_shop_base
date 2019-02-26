@@ -12,8 +12,8 @@ RSpec.describe Item, type: :model do
 
     it 'creates a slug for an item when created or updated' do
       merchant = create(:merchant)
-      item_1 = Item.create(name: "stetson one five two", description: "It's a hat", price: 2.50, merchant_id: merchant.id)
-      item_2 = Item.create(name: "stetson one five two", description: "It's a hat", price: 2.50, merchant_id: merchant.id)
+      item_1 = Item.create(name: "stetson one five two", description: "It's a hat", price: 2.50, merchant_id: merchant.id, inventory: 123)
+      item_2 = Item.create(name: "stetson one five two", description: "It's a hat", price: 2.50, merchant_id: merchant.id, inventory: 123)
 
       expect(item_1.slug).to eq("stetson-one-five-two")
       expect(item_2.slug).to_not eq("stetson-one-five-two")

@@ -1,4 +1,6 @@
 class Item < ApplicationRecord
+  before_validation :create_slug
+
   belongs_to :user, foreign_key: 'merchant_id'
   has_many :order_items
   has_many :orders, through: :order_items
@@ -46,5 +48,18 @@ class Item < ApplicationRecord
     OrderItem.joins(:order)
       .where(fulfilled: true, orders: {status: :completed}, item_id: self.id)
       .count > 0
+  end
+
+  private
+
+  def create_slug
+    if self.name
+      # binding.pry
+      if Item.exists?(name: self.name)
+        self.slug = self.name.parameterize.downcase + (rand).to_s
+      else
+        self.slug = self.name.parameterize.downcase
+      end
+    end
   end
 end
