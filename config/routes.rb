@@ -17,19 +17,19 @@ Rails.application.routes.draw do
   resources :users, only: [:create, :update], param: :slug
 
   get '/cart', to: 'cart#show'
-  post '/cart/item/:id', to: 'cart#add', as: :cart_item
-  post '/cart/addmoreitem/:id', to: 'cart#add_more_item', as: :cart_add_more_item
+  post '/cart/item/:slug', to: 'cart#add', as: :cart_item
+  post '/cart/addmoreitem/:slug', to: 'cart#add_more_item', as: :cart_add_more_item
   delete '/cart', to: 'cart#destroy', as: :cart_empty
-  delete '/cart/item/:id', to: 'cart#remove_more_item', as: :cart_remove_more_item
-  delete '/cart/item/:id/all', to: 'cart#remove_all_of_item', as: :cart_remove_item_all
+  delete '/cart/item/:slug', to: 'cart#remove_more_item', as: :cart_remove_more_item
+  delete '/cart/item/:slug/all', to: 'cart#remove_all_of_item', as: :cart_remove_item_all
 
   resources :items, only: [:index, :show]
 
   scope :dashboard, as: :dashboard do
     get '/', to: 'merchants#show'
     resources :items, module: :merchants
-    put '/items/:id/enable', to: 'merchants/items#enable', as: :enable_item
-    put '/items/:id/disable', to: 'merchants/items#disable', as: :disable_item
+    put '/items/:item_slug/enable', to: 'merchants/items#enable', as: :enable_item
+    put '/items/:item_slug/disable', to: 'merchants/items#disable', as: :disable_item
     get '/orders/:id', to: 'merchants/orders#show', as: :order
     put '/order_items/:id', to: 'merchants/order_items#update', as: :fulfill_order_item
   end
