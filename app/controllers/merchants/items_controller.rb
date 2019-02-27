@@ -1,5 +1,6 @@
 class Merchants::ItemsController < ApplicationController
   before_action :merchant_or_admin, only: [:index]
+  before_action :set_merchant
 
   def index
     @items = Item.where(user: current_user)
@@ -14,7 +15,7 @@ class Merchants::ItemsController < ApplicationController
   end
 
   def destroy
-    @item = Item.find(params[:id])
+    @item = Item.find_by(slug: params[:id])
     merchant = @item.user
     if @item && @item.ever_ordered?
       flash[:error] = "Attempt to delete #{@item.name} was thwarted!"
@@ -34,7 +35,7 @@ class Merchants::ItemsController < ApplicationController
   end
 
   def edit
-    @item = Item.find(params[:id])
+    @item = Item.find_by(slug: params[:id])
     @form_path = [:dashboard, @item]
   end
 
@@ -46,7 +47,7 @@ class Merchants::ItemsController < ApplicationController
     ip[:active] = true
     @merchant = current_user
     if current_admin?
-      @merchant = User.find(params[:merchant_id])
+      @merchant = User.find_by(slug: params[:slug])
     end
     @item = @merchant.items.create(ip)
     if @item.save
@@ -69,9 +70,10 @@ class Merchants::ItemsController < ApplicationController
   def update
     @merchant = current_user
     if current_admin?
-      @merchant = User.find(params[:merchant_id])
+      @merchant = User.find_by(slug: params[:slug])
     end
-    @item = Item.find(params[:id])
+    # binding.pry
+    @item = Item.find_by(slug: params[:item_slug])
 
     ip = item_params
     if ip[:image].empty?
@@ -98,12 +100,16 @@ class Merchants::ItemsController < ApplicationController
 
   private
 
+  def set_merchant
+    @merchant = User.find_by(slug: params[:slug])
+  end
+
   def item_params
     params.require(:item).permit(:name, :description, :image, :price, :inventory)
   end
 
   def set_item_active(state)
-    item = Item.find(params[:id])
+    item = Item.find_by(slug: params[:item_slug])
     item.active = state
     item.save
     if current_admin?
