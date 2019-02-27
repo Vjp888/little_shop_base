@@ -1,12 +1,12 @@
 class Admin::OrdersController < Admin::BaseController
+  before_action :set_user, only: [:index, :show]
+
   def index
-    user = User.find(params[:user_id])
-    @orders = user.orders
+    @orders = @user.orders
     render :'/profile/orders/index'
   end
 
   def show
-    @user = User.find(params[:user_id])
     @order = Order.find(params[:id])
 
     if @order.user_id != @user.id
@@ -23,5 +23,11 @@ class Admin::OrdersController < Admin::BaseController
     @order_items = @order.order_items_for_merchant(@merchant.id)
 
     render '/merchants/orders/show'
+  end
+
+  private
+
+  def set_user
+    @user = User.find_by(slug: params[:user_slug])
   end
 end

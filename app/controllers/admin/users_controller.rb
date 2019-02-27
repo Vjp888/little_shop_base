@@ -52,6 +52,7 @@ class Admin::UsersController < Admin::BaseController
   def set_user
     @user = User.find_by(slug: params[:slug])
   end
+  
   def user_params
     params.require(:user).permit(:name, :email, :address, :city, :state, :zip, :password)
   end
